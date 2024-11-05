@@ -25,11 +25,7 @@ connectToDatabase();
 // application routes
 app.use('/todo', todoHandler);
 
-// default error handler
-// eslint-disable-next-line consistent-return
-function errorHandler(err, req, res, next) {
-    if (res.headersSent) {
-        return next(err);
-    }
+// error handler
+app.use((err, req, res, next) => {
     res.status(500).json({ message: err.message });
-}
+});
