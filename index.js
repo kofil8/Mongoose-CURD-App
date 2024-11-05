@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const todoHandler = require('./routeHandaler/todoHandler');
 require('dotenv').config();
 
@@ -7,8 +8,10 @@ require('dotenv').config();
 const app = express();
 app.use(express.json());
 
+app.use(cors);
+
 // database connection
-async function connectToDatabase() {
+(async () => {
     try {
         await mongoose.connect('mongodb://localhost/todos', {});
         console.log('Database connected');
@@ -18,9 +21,7 @@ async function connectToDatabase() {
     } catch (err) {
         console.log(err);
     }
-}
-
-connectToDatabase();
+})();
 
 // application routes
 app.use('/todo', todoHandler);
