@@ -1,12 +1,15 @@
 const express = require('express');
 const Todo = require('../schemas/todoSchema');
+const checkLogin = require('../middlewares/checkLogin');
 
 const router = express.Router();
 
 // GET all todos
-router.get('/', async (req, res) => {
+router.get('/', checkLogin, async (req, res) => {
     try {
-        const activeTodos = await Todo.find({ status: 'active' })
+        const activeTodos = await Todo.find({
+            status: 'active',
+        })
             .select({
                 _id: 0,
                 __v: 0,
@@ -38,7 +41,7 @@ router.post('/', async (req, res) => {
     const newTodo = new Todo(req.body);
     try {
         const savedTodo = await newTodo.save();
-        res.send(200).json({ message: 'Todo saved successfully', todo: savedTodo });
+        res.status(200).json({ message: 'Todo saved successfully', todo: savedTodo });
     } catch (err) {
         res.json({ message: err });
     }
